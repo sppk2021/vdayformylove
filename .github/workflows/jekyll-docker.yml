@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Love Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(to bottom, #ff758c, #ff7eb3);
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            transition: top 1s ease-in-out;
+        }
+
+        .header.move-up {
+            top: 5%;
+        }
+
+        .container {
+            max-width: 90%;
+            transition: transform 1s ease-in-out;
+        }
+
+        .container.move-down {
+            transform: translateY(80px);
+        }
+
+        .button {
+            background: linear-gradient(145deg, #ff4081, #f50057);
+            color: white;
+            font-size: 1.6rem;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            margin-top: 40px;
+        }
+
+        .button:hover {
+            background: linear-gradient(145deg, #ff80ab, #ff4081);
+        }
+
+        .message {
+            display: none;
+            font-size: 1.8rem;
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Flip Card */
+        .photo {
+            width: 250px;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .photo:hover .flip-inner,
+        .photo.flipped .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 15px;
+        }
+
+        .flip-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .flip-back {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ff4081;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            transform: rotateY(180deg);
+        }
+
+        /* Floating Heart Animation */
+        @keyframes floatHeart {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.7;
+            animation: floatHeart 5s linear infinite;
+        }
+
+        /* Copyright */
+        .copyright {
+            position: absolute;
+            bottom: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .header { font-size: 2rem; }
+            .button { font-size: 1.2rem; padding: 10px 20px; }
+            .flip-back { font-size: 2rem; }
+            .photos { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header" id="header">
+        <h1>Happy Valentine's Day, My Love!</h1>
+    </div>
+
+    <div class="container" id="container">
+        <p>Click the button to see how much I love you</p>
+        <button class="button" id="loveButton">Click Me</button>
+        <div class="message" id="loveMessage">
+            <p>You are my heart, my soul, my greatest adventure. Every moment with you is a dream I never want to wake up from. ❤️</p>
+        </div>
+        <div class="photos" id="photoContainer"></div>
+    </div>
+
+    <div class="copyright">© SPPK for ATD</div>
+
+    <script>
+        const photos = [
+            'https://assets.onecompiler.app/43924vdyc/43924tvyn/viber_image_2025-02-12_19-15-22-772.jpg',
+            'https://assets.onecompiler.app/43924vdyc/43924tvyn/viber_image_2025-02-12_19-14-42-590.jpg',
+            'https://assets.onecompiler.app/43924vdyc/43924tvyn/viber_image_2025-02-12_19-14-44-092.jpg'
+        ];
+
+        const loveWords = ["I", "LOVE", "YOU"];
+
+        const showLoveContent = () => {
+            document.getElementById('loveMessage').style.display = 'block';
+            document.getElementById('header').classList.add('move-up');
+            document.getElementById('container').classList.add('move-down');
+
+            const photoContainer = document.getElementById('photoContainer');
+            photoContainer.innerHTML = '';
+
+            photos.forEach((photo, index) => {
+                const photoWrapper = document.createElement('div');
+                photoWrapper.classList.add('photo');
+
+                const flipInner = document.createElement('div');
+                flipInner.classList.add('flip-inner');
+
+                const flipFront = document.createElement('div');
+                flipFront.classList.add('flip-front');
+                const imgElement = document.createElement('img');
+                imgElement.src = photo;
+                flipFront.appendChild(imgElement);
+
+                const flipBack = document.createElement('div');
+                flipBack.classList.add('flip-back');
+                flipBack.textContent = loveWords[index];
+
+                flipInner.append(flipFront, flipBack);
+                photoWrapper.appendChild(flipInner);
+
+                photoWrapper.addEventListener('click', () => {
+                    photoWrapper.classList.toggle('flipped');
+                });
+
+                photoContainer.appendChild(photoWrapper);
+            });
+
+            generateRedHearts();
+        };
+
+        const generateHearts = (color) => {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = color === 'white' ? '🤍' : '❤️';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 500);
+        };
+
+        const generateRedHearts = () => {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => generateHearts('red'), i * 300);
+            }
+        };
+
+        document.getElementById('loveButton').addEventListener('click', showLoveContent);
+        generateHearts('white');
+    </script>
+</body>
+</html>
